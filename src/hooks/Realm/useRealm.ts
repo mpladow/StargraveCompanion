@@ -1,5 +1,5 @@
 import { useContext } from "react"
-import { RealmContext } from "../../context/RealmProvider"
+import { RealmContext } from "../../context/RealmProvider";
 
 export const useRealm = () => {
     const context = useContext(RealmContext);

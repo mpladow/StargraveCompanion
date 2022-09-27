@@ -31,10 +31,11 @@ export const Background: ObjectSchema = {
       type: 'list',
       objectType: 'StatModifier',
     },
-    SelectedModifiers: {
+    OptionalModifiers: {
       type: 'list',
       objectType: 'StatModifier',
     },
+    MinSelectedModsRequired: 'number'
   },
 };
 export const StatModifier: ObjectSchema = {

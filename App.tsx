@@ -37,6 +37,8 @@ import {
 import PreferencesProvider, {
   useUserPreferences,
 } from './src/context/PreferencesProvider';
+import RealmProvider from './src/context/RealmProvider';
+import CrewCreatorProvider from './src/context/CrewCreatorProvider';
 const App = () => {
   const {isDarkMode} = useUserPreferences();
   const [dm, setDm] = useState(isDarkMode);
@@ -58,17 +60,19 @@ const App = () => {
         theme={isDarkMode ? CombinedDarkTheme : CombinedDefaultTheme}>
         <NavigationContainer
           theme={isDarkMode ? CombinedDarkTheme : CombinedDefaultTheme}>
-          <SafeAreaView style={backgroundStyle}>
-            <AuthProvider>
-              {/* <RealmProvider> */}
+          <CrewCreatorProvider>
+            <SafeAreaView style={backgroundStyle}>
+              <AuthProvider>
+                {/* <RealmProvider> */}
                 <StatusBar
                   barStyle={isDarkMode ? 'light-content' : 'dark-content'}
                   backgroundColor={backgroundStyle.backgroundColor}
                 />
                 <AuthSwitcher />
-              {/* </RealmProvider> */}
-            </AuthProvider>
-          </SafeAreaView>
+                {/* </RealmProvider> */}
+              </AuthProvider>
+            </SafeAreaView>
+          </CrewCreatorProvider>
         </NavigationContainer>
       </PaperProvider>
     </PreferencesProvider>
