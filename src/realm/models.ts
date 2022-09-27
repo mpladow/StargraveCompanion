@@ -11,12 +11,12 @@ export const TasksSchema = {
 };
 export const Equipment: ObjectSchema = {
   name: 'Equipment',
-  primaryKey: '_id',
+  embedded: true,
   properties: {
     _id: 'objectId',
     EquipmentId: {
-        type: 'int',
-        indexed: true
+      type: 'int',
+      indexed: true,
     },
     Name: 'string',
   },
@@ -24,6 +24,7 @@ export const Equipment: ObjectSchema = {
 export const Background: ObjectSchema = {
   name: 'Background',
   primaryKey: '_id',
+  // embedded: true,
   properties: {
     _id: 'objectId',
     Name: 'string',
@@ -35,40 +36,40 @@ export const Background: ObjectSchema = {
       type: 'list',
       objectType: 'StatModifier',
     },
-    MinSelectedModsRequired: 'number'
+    MinSelectedModsRequired: 'int',
   },
 };
 export const StatModifier: ObjectSchema = {
   name: 'StatModifier',
-  primaryKey: '_id',
+  embedded: true,
   properties: {
     _id: 'objectId',
     Stat: 'string',
-    ModifierValue: 'number',
-    IsIncrement: 'boolean',
+    ModifierValue: 'int',
+    IsIncrement: 'bool',
   },
 };
-export const Stat: ObjectSchema = {
+export const StatSchema: ObjectSchema = {
   name: 'Stat',
-  primaryKey: '_id',
+  embedded: true,
   properties: {
     _id: 'objectId',
-    StatId: 'number',
+    StatId: 'int',
     Name: 'string',
-    Value: 'number',
-    Order: 'number',
+    Value: 'int',
+    Order: 'int',
     Modifiers: {
       type: 'list',
       objectType: 'StatModifier',
     },
   },
 };
-export const Statline: ObjectSchema = {
-  name: 'Stat',
-  primaryKey: '_id',
+export const StatlineSchema: ObjectSchema = {
+  name: 'StatLine',
+  embedded: true,
   properties: {
     _id: 'objectId',
-    StatLineId: 'number',
+    StatLineId: 'int',
     Name: 'string',
     Stats: {
       type: 'list',
@@ -78,7 +79,7 @@ export const Statline: ObjectSchema = {
 };
 export const Power: ObjectSchema = {
   name: 'Power',
-  primaryKey: '_id',
+  embedded: true,
   properties: {
     _id: 'objectId',
     PowerId: {
@@ -86,12 +87,12 @@ export const Power: ObjectSchema = {
       indexed: true,
     },
     Name: 'string',
-    Description: 'string'
+    Description: 'string',
   },
 };
 export const CharacterSchema: ObjectSchema = {
   name: 'Character',
-  primaryKey: '_id',
+  embedded: true,
   properties: {
     _id: 'objectId',
     Name: 'string',
@@ -99,15 +100,15 @@ export const CharacterSchema: ObjectSchema = {
       type: 'int',
       indexed: true,
     },
-    IsCaptain: 'boolean',
+    IsCaptain: 'bool',
     Background: 'Background',
-    Level: 'number',
-    GearSlots: 'number',
+    Level: 'int',
+    GearSlots: 'int',
     Equipment: {
       type: 'list',
       objectType: 'Equipment',
     },
-    StatLine: 'Statline',
+    StatLine: 'StatLine',
     Powers: {
       type: 'list',
       objectType: 'Power',
@@ -124,19 +125,19 @@ export const TeamSchema: ObjectSchema = {
       indexed: true,
     },
     TeamName: 'string',
-    Credits: 'number',
-    Experience: 'number',
+    Credits: 'int',
+    Experience: 'int',
     Descriptions: 'string',
     Captain: 'Character?',
     FirstMate: 'Character?',
-    Soldiers: {
-      type: 'list',
-      objectType: 'Soldier',
-    },
-    Specialists: {
-      type: 'list',
-      objectType: 'Specialist',
-    },
+    // Soldiers: {
+    //   type: 'list',
+    //   objectType: 'SoldierSchema',
+    // },
+    // Specialists: {
+    //   type: 'list',
+    //   objectType: 'SpecialistSchema',
+    // },
   },
 };
 

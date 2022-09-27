@@ -37,8 +37,9 @@ import {
 import PreferencesProvider, {
   useUserPreferences,
 } from './src/context/PreferencesProvider';
-import RealmProvider from './src/context/RealmProvider';
 import CrewCreatorProvider from './src/context/CrewCreatorProvider';
+import { createRealmContext } from '@realm/react';
+import { schema } from './src/realm';
 const App = () => {
   const {isDarkMode} = useUserPreferences();
   const [dm, setDm] = useState(isDarkMode);
@@ -54,6 +55,12 @@ const App = () => {
       ? CombinedDarkTheme.colors.text
       : CombinedDefaultTheme.colors.text,
   };
+
+  const { RealmProvider } = createRealmContext({ schema: schema })
+
+  const loadDevData = () => {
+    console.log('loading realm')
+  }
   return (
     <PreferencesProvider>
       <PaperProvider
@@ -63,13 +70,13 @@ const App = () => {
           <CrewCreatorProvider>
             <SafeAreaView style={backgroundStyle}>
               <AuthProvider>
-                {/* <RealmProvider> */}
+                <RealmProvider onFirstOpen={loadDevData}>
                 <StatusBar
                   barStyle={isDarkMode ? 'light-content' : 'dark-content'}
                   backgroundColor={backgroundStyle.backgroundColor}
                 />
                 <AuthSwitcher />
-                {/* </RealmProvider> */}
+                </RealmProvider>
               </AuthProvider>
             </SafeAreaView>
           </CrewCreatorProvider>
