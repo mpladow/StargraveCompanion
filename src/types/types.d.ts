@@ -1,0 +1,1 @@
+type ForcedAny<Reason extends string> = Reason extends string ? any : never

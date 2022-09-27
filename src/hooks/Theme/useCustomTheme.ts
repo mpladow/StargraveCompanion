@@ -1,6 +1,6 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React, {useContext} from 'react';
-import {ThemeContext} from '../../context/ThemeProvider';
+import {PreferencesContext} from '../../context/PreferencesProvider';
 
 const useCustomTheme = () => {
   const context = useContext(ThemeContext);

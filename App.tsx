@@ -14,7 +14,7 @@ import {
   DarkTheme as NavigationDarkTheme,
   DefaultTheme as NavigationDefaultTheme,
 } from '@react-navigation/native';
-import React, {type PropsWithChildren} from 'react';
+import React, {useState, type PropsWithChildren} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -25,11 +25,8 @@ import {
   View,
 } from 'react-native';
 
-import RealmProvider from './src/context/RealmProvider';
 import AuthProvider from './src/context/AuthProvider';
 import AuthSwitcher from './src/screens/AuthSwitcher';
-import MainDrawer from './src/screens/MainScreens/MainDrawer';
-import CrewHome from './src/screens/MainScreens/Crew/CrewHome';
 import merge from 'deepmerge';
 
 import {
@@ -37,38 +34,44 @@ import {
   DefaultTheme as PaperDefaultTheme,
   Provider as PaperProvider,
 } from 'react-native-paper';
+import PreferencesProvider, {
+  useUserPreferences,
+} from './src/context/PreferencesProvider';
 const App = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
-
-
-  const CombinedDefaultTheme = merge(PaperDarkTheme, NavigationDefaultTheme);
+  const {isDarkMode} = useUserPreferences();
+  const [dm, setDm] = useState(isDarkMode);
+  const CombinedDefaultTheme = merge(PaperDefaultTheme, NavigationDefaultTheme);
   const CombinedDarkTheme = merge(PaperDarkTheme, NavigationDarkTheme);
 
   const backgroundStyle = {
-    backgroundColor: !isDarkMode
+    backgroundColor: isDarkMode
       ? CombinedDarkTheme.colors.background
       : CombinedDefaultTheme.colors.background,
     flex: 1,
-    color: isDarkMode ? CombinedDarkTheme.colors.text : CombinedDefaultTheme.colors.text,
+    color: isDarkMode
+      ? CombinedDarkTheme.colors.text
+      : CombinedDefaultTheme.colors.text,
   };
   return (
-    <PaperProvider theme={!isDarkMode? CombinedDarkTheme: CombinedDefaultTheme}>
-      <NavigationContainer theme={!isDarkMode? CombinedDarkTheme: CombinedDefaultTheme}>
-        <SafeAreaView style={backgroundStyle}>
-          {/* <PaperProvider theme={isDarkMode ? darkPaperTheme: darkPaperTheme}> */}
-          {/* <RealmProvider> */}
-          <AuthProvider>
-            <StatusBar
-              barStyle={isDarkMode ? 'dark-content' : 'light-content'}
-              backgroundColor={backgroundStyle.backgroundColor}
-            />
-            <AuthSwitcher />
-          </AuthProvider>
-          {/* </RealmProvider> */}
-        </SafeAreaView>
-      </NavigationContainer>
-    </PaperProvider>
+    <PreferencesProvider>
+      <PaperProvider
+        theme={isDarkMode ? CombinedDarkTheme : CombinedDefaultTheme}>
+        <NavigationContainer
+          theme={isDarkMode ? CombinedDarkTheme : CombinedDefaultTheme}>
+          <SafeAreaView style={backgroundStyle}>
+            <AuthProvider>
+              {/* <RealmProvider> */}
+                <StatusBar
+                  barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+                  backgroundColor={backgroundStyle.backgroundColor}
+                />
+                <AuthSwitcher />
+              {/* </RealmProvider> */}
+            </AuthProvider>
+          </SafeAreaView>
+        </NavigationContainer>
+      </PaperProvider>
+    </PreferencesProvider>
   );
 };
 

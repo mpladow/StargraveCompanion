@@ -6,6 +6,8 @@ import NotesHome from './Notes/NotesHome';
 import {Button, Text} from 'react-native-paper';
 import {useAuth} from '../../hooks/Authentication/useAuth';
 import PhotoshareHome from './PhotoShare/PhotoshareHome';
+import CrewHome from './Crew/CrewHome';
+import CrewStack from './Crew/CrewStack';
 
 const MainTabs = () => {
   const MainTab = createBottomTabNavigator();
@@ -19,32 +21,11 @@ const MainTabs = () => {
       screenOptions={{
         tabBarStyle: {backgroundColor: isDarkMode? 'transparent' : 'transparent'},
         headerStyle: {backgroundColor: 'transparent'},
-        headerTitle: () => <Text>{}</Text>,
-        headerRight: () => (
-          <Button
-            onPress={() => {
-              logout();
-              console.log('LOGOUT');
-            }}>
-            Logout
-          </Button>
-        ),
+        headerShown: false,
+        // headerTitle: () => <Text>{}</Text>,
       }}>
-      <MainTab.Screen
-        name="TasksHome"
-        options={{title: 'Tasks'}}
-        component={TasksHome}
-      />
-      <MainTab.Screen
-        name="NotesHome"
-        options={{title: 'Notes'}}
-        component={NotesHome}
-      />
-      <MainTab.Screen
-        name="PhotoShareHome"
-        options={{title: 'PhoShare'}}
-        component={PhotoshareHome}
-      />
+        <MainTab.Screen name="CrewStack" component={CrewStack}/>
+
     </MainTab.Navigator>
   );
 };
