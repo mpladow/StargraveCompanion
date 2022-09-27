@@ -51,7 +51,7 @@ const CrewHome = ({navigation}) => {
         label="Crew Name"
         placeholder="Enter Crew Name"
         disabled={editMode}
-        right={<TextInput.Icon icon="pencil" onPress={onEditCrewNamePress} />}
+        right={<TextInput.Icon icon={editMode? 'pencil' : 'check'} onPress={onEditCrewNamePress} />}
       />
       <DropdownField
         control={control}
