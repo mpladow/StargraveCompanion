@@ -1,3 +1,3 @@
-import {TasksSchema, TeamSchema} from './models';
+import {Background, CharacterSchema, Equipment, StatSchema, StatlineSchema, StatModifier, TeamSchema, Power} from './models';
 
-export const schema = [TasksSchema, TeamSchema];
+export const schema = [TeamSchema, CharacterSchema, Equipment, StatlineSchema,StatModifier, Background, StatSchema, Power];
