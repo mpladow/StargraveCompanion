@@ -1,5 +1,5 @@
 import {StyleSheet, View} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Container from '../../../common/components/Atoms/Container';
 import {Button, Menu, TextInput} from 'react-native-paper';
 import Text from '../../../common/components/Atoms/Text';
@@ -38,7 +38,15 @@ const CrewHome = ({navigation}) => {
   const editCaptain = () => {
     navigation.navigate('CaptainEdit');
   };
-  const [showDropDown, setShowDropDown] = useState(false);
+
+  useEffect(() => {
+    console.log('dsfsdf');
+    // setup dropdown values
+    const _bg = backgrounds.map(
+      x => ({label: x.Name, value: x._id.toHexString()} as DropdownItem),
+    );
+    setBgDropdown(_bg);
+  }, [backgrounds]);
 
   const onEditCrewNamePress = () => {
     setEditMode(!editMode);
@@ -51,12 +59,17 @@ const CrewHome = ({navigation}) => {
         label="Crew Name"
         placeholder="Enter Crew Name"
         disabled={editMode}
-        right={<TextInput.Icon icon={editMode? 'pencil' : 'check'} onPress={onEditCrewNamePress} />}
+        right={
+          <TextInput.Icon
+            icon={editMode ? 'pencil' : 'check'}
+            onPress={onEditCrewNamePress}
+          />
+        }
       />
       <DropdownField
         control={control}
         fieldName={'Background'}
-        label="Crew Name"
+        label="Background"
         placeholder="Enter Crew Name"
         disabled={editMode}
         values={bgDropdown}

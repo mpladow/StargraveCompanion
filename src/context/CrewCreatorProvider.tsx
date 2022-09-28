@@ -9,10 +9,13 @@ import React, {
   useState,
 } from 'react';
 import {Colors} from '../themes/Colors';
-import { Background } from '../types/models';
+import {BackgroundProps} from '../types/models';
+import RealmContext from './RealmContext';
+import {BackgroundSchema} from '../realm/models';
+import {DropdownItem} from '../types/types';
 
 interface CrewCreatorContextProps {
-  backgrounds: Background[];
+  backgrounds: BackgroundProps[];
 }
 
 export const CrewCreatorContext = createContext<CrewCreatorContextProps>(
@@ -23,13 +26,15 @@ const CrewCreatorProvider = ({
 }: {
   children: ReactNode;
 }): ReactElement => {
-  const [backgrounds, setBackgrounds] = useState<Background[]>([]);
+  const {useRealm, useQuery} = RealmContext;
+
+  const backgrounds = useQuery<BackgroundProps>('Background');
   // get data from realmdb
-  useEffect(()=> {
-  }, [])
-  const getBackgrounds = () => {
-{}
-  }
+  useEffect(() => {
+    // setup dropdowns
+  }, []);
+
+
 
   return (
     <CrewCreatorContext.Provider value={{backgrounds}}>
