@@ -1,83 +1,5 @@
 import {ObjectSchema} from 'realm';
 
-export const EquipmentSchema: ObjectSchema = {
-  name: 'Equipment',
-  properties: {
-    _id: 'objectId',
-    EquipmentId: {
-      type: 'int',
-      indexed: true,
-    },
-    Name: 'string',
-  },
-};
-export const BackgroundSchema: ObjectSchema = {
-  name: 'Background',
-  primaryKey: '_id',
-  properties: {
-    _id: 'objectId',
-    Name: 'string',
-    Description: 'string',
-    PermStatModifier: {
-      type: 'list',
-      objectType: 'StatModifier',
-    },
-    OptionalModifiers: {
-      type: 'list',
-      objectType: 'StatModifier',
-    },
-    MinSelectedModsRequired: 'int',
-  },
-};
-export const StatModifierSchema: ObjectSchema = {
-  name: 'StatModifier',
-  embedded: true,
-  properties: {
-    _id: 'objectId',
-    Stat: 'string',
-    ModifierValue: 'int',
-    IsIncrement: 'bool',
-  },
-};
-export const StatSchema: ObjectSchema = {
-  name: 'Stat',
-  embedded: true,
-  properties: {
-    _id: 'objectId',
-    StatId: 'int',
-    Name: 'string',
-    Value: 'int',
-    Order: 'int',
-    Modifiers: {
-      type: 'list',
-      objectType: 'StatModifier',
-    },
-  },
-};
-export const StatlineSchema: ObjectSchema = {
-  name: 'StatLine',
-  properties: {
-    _id: 'objectId',
-    StatLineId: 'int',
-    Name: 'string',
-    Stats: {
-      type: 'list',
-      objectType: 'Stat',
-    },
-  },
-};
-export const PowerSchema: ObjectSchema = {
-  name: 'Power',
-  properties: {
-    _id: 'objectId',
-    PowerId: {
-      type: 'int',
-      indexed: true,
-    },
-    Name: 'string',
-    Description: 'string',
-  },
-};
 export const CharacterSchema: ObjectSchema = {
   name: 'Character',
   embedded: true,
@@ -113,6 +35,7 @@ export const TeamSchema: ObjectSchema = {
     Description: 'string?',
     Captain: 'Character?',
     FirstMate: 'Character?',
+    SpecialistSlots: 'int'
     // Soldiers: {
     //   type: 'list',
     //   objectType: 'SoldierSchema',
@@ -123,6 +46,126 @@ export const TeamSchema: ObjectSchema = {
     // },
   },
 };
+export const EquipmentSchema: ObjectSchema = {
+  name: 'Equipment',
+  properties: {
+    _id: 'objectId',
+    EquipmentId: {
+      type: 'int',
+      indexed: true,
+    },
+    Name: 'string',
+    Description: 'string',
+    SpecialRules:'string?',
+    GearSlots: 'int?'
+  },
+};
+
+export const WeaponSchema: ObjectSchema = {
+  name: 'Weapon',
+  properties: {
+    _id: 'objectId',
+    EquipmentId: {
+      type: 'int',
+      indexed: true,
+    },
+    Name: 'string',
+    Description: 'string',
+    SpecialRules:'string?',
+    StatModifiers: {
+      type: 'list',
+      objectType: 'StatModifer'
+    },
+    GearSlots: 'int?'
+  },
+}
+export const ArmourSchema: ObjectSchema = {
+  name: 'Armour',
+  properties: {
+    _id: 'objectId',
+    EquipmentId: {
+      type: 'int',
+      indexed: true,
+    },
+    Name: 'string',
+    Description: 'string',
+    SpecialRules:'string?',
+    StatModifiers: {
+      type: 'list',
+      objectType: 'StatModifer'
+    },
+    GearSlots: 'int?'
+  },
+}
+export const BackgroundSchema: ObjectSchema = {
+  name: 'Background',
+  primaryKey: '_id',
+  properties: {
+    _id: 'objectId',
+    Name: 'string',
+    Description: 'string',
+    PermStatModifier: {
+      type: 'list',
+      objectType: 'StatModifier',
+    },
+    OptionalModifiers: {
+      type: 'list',
+      objectType: 'StatModifier',
+    },
+    MinSelectedModsRequired: 'int',
+  },
+};
+export const StatModifierSchema: ObjectSchema = {
+  name: 'StatModifier',
+  embedded: true,
+  properties: {
+    _id: 'objectId',
+    Stat: 'string',
+    ModifierValue: 'int',
+    IsIncrement: 'bool',
+  },
+};
+export const StatSchema: ObjectSchema = {
+  name: 'Stat',
+  properties: {
+    _id: 'objectId',
+    Name: 'string',
+    Value: 'int',
+    Order: 'int',
+    Modifiers: {
+      type: 'list',
+      objectType: 'StatModifier',
+    },
+  },
+};
+export const StatlineSchema: ObjectSchema = {
+  name: 'StatLine',
+  properties: {
+    _id: 'objectId',
+    StatLineId: 'int',
+    Name: 'string',
+    Stats: {
+      type: 'list',
+      objectType: 'Stat',
+    },
+  },
+};
+export const PowerSchema: ObjectSchema = {
+  name: 'Power',
+  properties: {
+    _id: 'objectId',
+    PowerId: {
+      type: 'int',
+      indexed: true,
+    },
+    Name: 'string',
+    Description: 'string',
+    Activation: 'int',
+    Stress: 'int'
+  },
+};
+
+
 export const generateNewTeam = (name: string) => {
   return {
     _id: new Realm.BSON.ObjectId(),

@@ -44,6 +44,7 @@ const DropdownField = forwardRef<any, DropdownFieldProps>(
               value={value}
               setValue={onChange}
               list={values}
+              
             />
             {error?.message && (
               <View style={{paddingTop: 4}}>

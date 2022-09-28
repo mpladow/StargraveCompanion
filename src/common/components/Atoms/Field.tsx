@@ -12,7 +12,7 @@ interface FieldProps {
   onBlur?: () => void;
   label?: string;
   disabled?: boolean;
-  right: ReactNode;
+  right?: ReactNode;
   placeholder: string;
 }
 const Field = forwardRef<any, FieldProps>(

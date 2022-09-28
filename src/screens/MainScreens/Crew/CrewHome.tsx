@@ -14,14 +14,13 @@ import DropdownField from '../../../common/components/Atoms/DropdownField';
 const CrewHome = ({navigation}) => {
   const [editMode, setEditMode] = useState(false);
 
-  const {backgrounds, currentTeam, createNewTeam} = useCrewCreator();
+  const {currentTeam, createNewTeam, deleteTeam, updateTeamName} =
+    useCrewCreator();
 
-  const [bgDropdown, setBgDropdown] = useState<DropdownItem[]>([]);
   type CrewHomeFormProps = {
     crewName: string;
   };
   // const crewNameRef = useRef()
-
 
   const {
     control,
@@ -34,20 +33,31 @@ const CrewHome = ({navigation}) => {
     reValidateMode: 'onBlur',
   });
 
-  const {toggleMode} = useUserPreferences();
   const editCaptain = () => {
     navigation.navigate('CaptainEdit');
   };
 
-  // useEffect(() => {
-  //   // setup dropdown values
-  //   const _bg = backgrounds.map(
-  //     x => ({label: x.Name, value: x._id.toHexString()} as DropdownItem),
-  //   );
-  //   setBgDropdown(_bg);
-  // }, [backgrounds]);
+  const editFirstMate = () => {
+    navigation.navigate('CaptainEdit');
+  };
+  useEffect(() => {
+    if (currentTeam) {
+      setEditMode(false);
+    }else{
+      setEditMode(true);
+    }
+  }, [currentTeam]);
+
+  useEffect(() => {
+    if (currentTeam) setValue('crewName', currentTeam?.TeamName);
+    console.log('currentTeam useEffect');
+  }, [currentTeam?.TeamName]);
+
 
   const onEditCrewNamePress = () => {
+    if (!editMode) {
+      updateTeamName(getValues('crewName'));
+    }
     setEditMode(!editMode);
   };
   const onCreateNewTeamPress = () => {
@@ -55,38 +65,79 @@ const CrewHome = ({navigation}) => {
     console.log(getValues('crewName'));
     createNewTeam(crewName);
   };
+
+  const renderCrew = () => {
+    return (
+      <View>
+        {renderCrewDetails()}
+        {renderCaptainField()}
+        {renderFirstMateField()}
+        <Button onPress={deleteTeam}>Delete CREW DEBUG</Button>
+      </View>
+    );
+  };
+  const renderCrewDetails = () => {
+    return (
+      <View
+        style={{
+          paddingVertical: 8,
+          paddingHorizontal: 4,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}>
+        <Text>Credits: {currentTeam?.Credits}</Text>
+        <Text>Specialists: 4/{currentTeam?.SpecialistSlots}</Text>
+      </View>
+    );
+  };
+  const renderCaptainField = () => {
+    return currentTeam?.Captain ? (
+      <View>
+        <Text>Captain Created</Text>
+      </View>
+    ) : (
+      <View style={{paddingBottom: 8}}>
+        <Button mode="contained" onPress={editCaptain}>
+          Add Captain
+        </Button>
+      </View>
+    );
+  };
+
+  const renderFirstMateField = () => {
+    return currentTeam?.FirstMate ? (
+      <View>
+        <Text>First Mate Created</Text>
+      </View>
+    ) : (
+      <View>
+        <Button mode="contained" onPress={editCaptain}>
+          Add First Mate
+        </Button>
+      </View>
+    );
+  };
   return (
     <Container>
       <Field
-      // ref={crewNameRef}
+        // ref={crewNameRef}
         control={control}
         fieldName={'crewName'}
         label="Crew Name"
         placeholder="Enter Crew Name"
-        disabled={editMode}
+        disabled={!editMode}
         right={
           <TextInput.Icon
-            icon={editMode ? 'pencil' : 'check'}
+            icon={editMode ? 'check' : 'pencil'}
             onPress={onEditCrewNamePress}
           />
         }
       />
-      {currentTeam ? (
-        <Text>TEAM EXISTS</Text>
-      ) : (
+      {!currentTeam ? (
         <Button onPress={onCreateNewTeamPress}>Create new team</Button>
+      ) : (
+        renderCrew()
       )}
-      {/* <DropdownField
-        control={control}
-        fieldName={'Background'}
-        label="Background"
-        placeholder="Enter Crew Name"
-        disabled={editMode}
-        values={bgDropdown}
-      /> */}
-
-      <Button onPress={() => toggleMode()}>TOGGLE MODE</Button>
-      <Button onPress={() => editCaptain()}>Edit Captain</Button>
     </Container>
   );
 };
