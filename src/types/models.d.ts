@@ -12,3 +12,12 @@ export interface StatModifierProps {
   ModifierValue: number;
   IsIncrement: boolean;
 }
+export interface TeamProps {
+  _id: Realm.BSON.ObjectId;
+  TeamName: string;
+  Credits: number;
+  Experience: number;
+  Description?: string?,
+  // Captain: 'Character',
+  // FirstMate: 'Character?',
+}

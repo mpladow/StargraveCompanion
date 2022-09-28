@@ -105,17 +105,12 @@ export const CharacterSchema: ObjectSchema = {
 };
 export const TeamSchema: ObjectSchema = {
   name: 'Team',
-  embedded: true,
   properties: {
     _id: 'objectId',
-    TeamId: {
-      type: 'int',
-      indexed: true,
-    },
     TeamName: 'string',
     Credits: 'int',
     Experience: 'int',
-    Descriptions: 'string',
+    Description: 'string?',
     Captain: 'Character?',
     FirstMate: 'Character?',
     // Soldiers: {
@@ -128,6 +123,15 @@ export const TeamSchema: ObjectSchema = {
     // },
   },
 };
+export const generateNewTeam = (name: string) => {
+  return {
+    _id: new Realm.BSON.ObjectId(),
+    TeamName: name,
+    Credits: 500,
+    Experience: 0,
+    Description: '',
+  };
+}
 
 export const UsersSchema = {
   name: 'Users',
