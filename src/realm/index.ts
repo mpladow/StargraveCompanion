@@ -1,3 +1,21 @@
-import {Background, CharacterSchema, Equipment, StatSchema, StatlineSchema, StatModifier, TeamSchema, Power} from './models';
+import {
+  BackgroundSchema,
+  CharacterSchema,
+  EquipmentSchema,
+  StatSchema,
+  StatlineSchema,
+  StatModifierSchema,
+  TeamSchema,
+  PowerSchema,
+} from './models';
 
-export const schema = [TeamSchema, CharacterSchema, Equipment, StatlineSchema,StatModifier, Background, StatSchema, Power];
+export const schema = [
+  TeamSchema,
+  CharacterSchema,
+  EquipmentSchema,
+  StatlineSchema,
+  StatModifierSchema,
+  BackgroundSchema,
+  StatSchema,
+  PowerSchema,
+];

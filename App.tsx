@@ -14,16 +14,8 @@ import {
   DarkTheme as NavigationDarkTheme,
   DefaultTheme as NavigationDefaultTheme,
 } from '@react-navigation/native';
-import React, {useState, type PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import React, {useEffect} from 'react';
+import {SafeAreaView, StatusBar} from 'react-native';
 
 import AuthProvider from './src/context/AuthProvider';
 import AuthSwitcher from './src/screens/AuthSwitcher';
@@ -38,11 +30,11 @@ import PreferencesProvider, {
   useUserPreferences,
 } from './src/context/PreferencesProvider';
 import CrewCreatorProvider from './src/context/CrewCreatorProvider';
-import { createRealmContext } from '@realm/react';
-import { schema } from './src/realm';
+import {BackgroundBiomorphMOCK, BackgroundCyborgMOCK} from './src/mocks/realm';
+import RealmContext from './src/context/RealmContext';
+
 const App = () => {
   const {isDarkMode} = useUserPreferences();
-  const [dm, setDm] = useState(isDarkMode);
   const CombinedDefaultTheme = merge(PaperDefaultTheme, NavigationDefaultTheme);
   const CombinedDarkTheme = merge(PaperDarkTheme, NavigationDarkTheme);
 
@@ -56,11 +48,29 @@ const App = () => {
       : CombinedDefaultTheme.colors.text,
   };
 
-  const { RealmProvider } = createRealmContext({ schema: schema })
+  const {useRealm} = RealmContext;
+  const realm = useRealm();
+
+  useEffect(() => {
+    loadDevData();
+  }, []);
 
   const loadDevData = () => {
-    console.log('loading realm')
-  }
+    try {
+      realm.write(() => {
+        if (realm.objects('Background').isEmpty()) {
+          console.log('Debug data created');
+          realm.create('Background', BackgroundBiomorphMOCK);
+          realm.create('Background', BackgroundCyborgMOCK);
+        } else {
+          console.log('Data already created');
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <PreferencesProvider>
       <PaperProvider
@@ -70,13 +80,11 @@ const App = () => {
           <CrewCreatorProvider>
             <SafeAreaView style={backgroundStyle}>
               <AuthProvider>
-                <RealmProvider onFirstOpen={loadDevData}>
                 <StatusBar
                   barStyle={isDarkMode ? 'light-content' : 'dark-content'}
                   backgroundColor={backgroundStyle.backgroundColor}
                 />
                 <AuthSwitcher />
-                </RealmProvider>
               </AuthProvider>
             </SafeAreaView>
           </CrewCreatorProvider>
@@ -85,24 +93,5 @@ const App = () => {
     </PreferencesProvider>
   );
 };
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
 
 export default App;

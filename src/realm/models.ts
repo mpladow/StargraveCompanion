@@ -1,17 +1,7 @@
 import {ObjectSchema} from 'realm';
 
-export const TasksSchema = {
-  name: 'Task',
-  primaryKey: '_id',
-  properties: {
-    _id: 'objectId',
-    Text: 'string',
-    Status: 'string?',
-  },
-};
-export const Equipment: ObjectSchema = {
+export const EquipmentSchema: ObjectSchema = {
   name: 'Equipment',
-  embedded: true,
   properties: {
     _id: 'objectId',
     EquipmentId: {
@@ -21,13 +11,13 @@ export const Equipment: ObjectSchema = {
     Name: 'string',
   },
 };
-export const Background: ObjectSchema = {
+export const BackgroundSchema: ObjectSchema = {
   name: 'Background',
   primaryKey: '_id',
-  // embedded: true,
   properties: {
     _id: 'objectId',
     Name: 'string',
+    Description: 'string',
     PermStatModifier: {
       type: 'list',
       objectType: 'StatModifier',
@@ -39,7 +29,7 @@ export const Background: ObjectSchema = {
     MinSelectedModsRequired: 'int',
   },
 };
-export const StatModifier: ObjectSchema = {
+export const StatModifierSchema: ObjectSchema = {
   name: 'StatModifier',
   embedded: true,
   properties: {
@@ -66,7 +56,6 @@ export const StatSchema: ObjectSchema = {
 };
 export const StatlineSchema: ObjectSchema = {
   name: 'StatLine',
-  embedded: true,
   properties: {
     _id: 'objectId',
     StatLineId: 'int',
@@ -77,9 +66,8 @@ export const StatlineSchema: ObjectSchema = {
     },
   },
 };
-export const Power: ObjectSchema = {
+export const PowerSchema: ObjectSchema = {
   name: 'Power',
-  embedded: true,
   properties: {
     _id: 'objectId',
     PowerId: {
@@ -117,7 +105,7 @@ export const CharacterSchema: ObjectSchema = {
 };
 export const TeamSchema: ObjectSchema = {
   name: 'Team',
-  primaryKey: '_id',
+  embedded: true,
   properties: {
     _id: 'objectId',
     TeamId: {
@@ -152,5 +140,9 @@ export const UsersSchema = {
     },
     FirstName: 'string',
     Surname: 'string',
+    Teams: {
+      type: 'list',
+      objectType: 'Team',
+    },
   },
 };

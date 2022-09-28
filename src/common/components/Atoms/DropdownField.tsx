@@ -23,7 +23,6 @@ const DropdownField = forwardRef<any, DropdownFieldProps>(
       control,
       onFocus,
       label,
-      visible,
       values,
       ...props
     },
@@ -37,9 +36,9 @@ const DropdownField = forwardRef<any, DropdownFieldProps>(
         render={({field: {onChange, onBlur, value}, fieldState: {error}}) => (
           <View style={{marginBottom: 4}}>
             <DropDown
-              label={'label'}
+              label={label}
               mode={'outlined'}
-              visible={visible}
+              visible={showDropdown}
               showDropDown={() => setShowDropdown(true)}
               onDismiss={() => setShowDropdown(false)}
               value={value}
