@@ -1,5 +1,5 @@
 import {StyleSheet, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import Container from '../../../common/components/Atoms/Container';
 import {Button, Menu, TextInput} from 'react-native-paper';
 import Text from '../../../common/components/Atoms/Text';
@@ -12,16 +12,16 @@ import {DropdownItem} from '../../../types/types';
 import DropdownField from '../../../common/components/Atoms/DropdownField';
 
 const CrewHome = ({navigation}) => {
-  const [crewName, setCrewName] = useState<string>('');
-
   const [editMode, setEditMode] = useState(false);
 
-  const {backgrounds} = useCrewCreator();
+  const {backgrounds, currentTeam, createNewTeam} = useCrewCreator();
 
   const [bgDropdown, setBgDropdown] = useState<DropdownItem[]>([]);
   type CrewHomeFormProps = {
     crewName: string;
   };
+  // const crewNameRef = useRef()
+
 
   const {
     control,
@@ -39,21 +39,26 @@ const CrewHome = ({navigation}) => {
     navigation.navigate('CaptainEdit');
   };
 
-  useEffect(() => {
-    console.log('dsfsdf');
-    // setup dropdown values
-    const _bg = backgrounds.map(
-      x => ({label: x.Name, value: x._id.toHexString()} as DropdownItem),
-    );
-    setBgDropdown(_bg);
-  }, [backgrounds]);
+  // useEffect(() => {
+  //   // setup dropdown values
+  //   const _bg = backgrounds.map(
+  //     x => ({label: x.Name, value: x._id.toHexString()} as DropdownItem),
+  //   );
+  //   setBgDropdown(_bg);
+  // }, [backgrounds]);
 
   const onEditCrewNamePress = () => {
     setEditMode(!editMode);
   };
+  const onCreateNewTeamPress = () => {
+    let crewName = getValues('crewName');
+    console.log(getValues('crewName'));
+    createNewTeam(crewName);
+  };
   return (
     <Container>
       <Field
+      // ref={crewNameRef}
         control={control}
         fieldName={'crewName'}
         label="Crew Name"
@@ -66,14 +71,19 @@ const CrewHome = ({navigation}) => {
           />
         }
       />
-      <DropdownField
+      {currentTeam ? (
+        <Text>TEAM EXISTS</Text>
+      ) : (
+        <Button onPress={onCreateNewTeamPress}>Create new team</Button>
+      )}
+      {/* <DropdownField
         control={control}
         fieldName={'Background'}
         label="Background"
         placeholder="Enter Crew Name"
         disabled={editMode}
         values={bgDropdown}
-      />
+      /> */}
 
       <Button onPress={() => toggleMode()}>TOGGLE MODE</Button>
       <Button onPress={() => editCaptain()}>Edit Captain</Button>

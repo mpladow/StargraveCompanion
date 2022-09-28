@@ -3,9 +3,10 @@ import React, {forwardRef, ReactElement, ReactNode} from 'react';
 import {Controller, FieldValues, FieldErrors, Control} from 'react-hook-form';
 import {TextInput, useTheme} from 'react-native-paper';
 import Text from './Text';
+import { ForcedAny } from '../../../types/types';
 
 interface FieldProps {
-  fieldName: ForcedAny<'No Need to force a type'>;
+  fieldName: string;
   control: Control<ForcedAny<'Inferred values from form'>>;
   onFocus?: () => void;
   onBlur?: () => void;
@@ -23,12 +24,13 @@ const Field = forwardRef<any, FieldProps>(
         render={({field: {onChange, onBlur, value}, fieldState: {error}}) => (
           <View style={{marginBottom: 4}}>
             <TextInput
+            // ref={ref}
             mode={'outlined'}
               value={value}
               style={{color: colors.primary}}
               label={label}
               onBlur={onBlur}
-              onChange={onChange}
+              onChangeText={onChange}
               {...props}
             />
             {error?.message && (
