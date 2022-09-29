@@ -1,3 +1,4 @@
+import {ModSource} from '../common/enums';
 import {BackgroundProps, StatModifierProps} from '../types/models';
 
 export const BackgroundBiomorphMOCK: BackgroundProps = {
@@ -24,7 +25,7 @@ export const BackgroundBiomorphMOCK: BackgroundProps = {
       _id: new Realm.BSON.ObjectID(),
       Stat: 'Health',
       ModifierValue: 1,
-      IsIncrement: true,
+      Source: ModSource.Background.toString(),
     } as StatModifierProps,
   ],
   OptionalModifiers: [
@@ -32,19 +33,19 @@ export const BackgroundBiomorphMOCK: BackgroundProps = {
       _id: new Realm.BSON.ObjectID(),
       Stat: 'Move',
       ModifierValue: 1,
-      IsIncrement: true,
+      Source: ModSource.OptionalBackgroundMod.toString(),
     } as StatModifierProps,
     {
       _id: new Realm.BSON.ObjectID(),
       Stat: 'Fight',
       ModifierValue: 1,
-      IsIncrement: true,
+      Source: ModSource.OptionalBackgroundMod.toString(),
     } as StatModifierProps,
     {
       _id: new Realm.BSON.ObjectID(),
       Stat: 'Shoot',
       ModifierValue: 1,
-      IsIncrement: true,
+      Source: ModSource.OptionalBackgroundMod.toString(),
     } as StatModifierProps,
   ],
   MinSelectedModsRequired: 2,
@@ -70,7 +71,7 @@ export const BackgroundCyborgMOCK: BackgroundProps = {
       _id: new Realm.BSON.ObjectID(),
       Stat: 'Health',
       ModifierValue: 1,
-      IsIncrement: true,
+      Source: ModSource.Background.toString(),
     } as StatModifierProps,
   ],
   OptionalModifiers: [
@@ -78,19 +79,19 @@ export const BackgroundCyborgMOCK: BackgroundProps = {
       _id: new Realm.BSON.ObjectID(),
       Stat: 'Move',
       ModifierValue: 1,
-      IsIncrement: true,
+      Source: ModSource.OptionalBackgroundMod.toString(),
     } as StatModifierProps,
     {
       _id: new Realm.BSON.ObjectID(),
       Stat: 'Fight',
       ModifierValue: 1,
-      IsIncrement: true,
+      Source: ModSource.OptionalBackgroundMod.toString(),
     } as StatModifierProps,
     {
       _id: new Realm.BSON.ObjectID(),
       Stat: 'Shoot',
       ModifierValue: 1,
-      IsIncrement: true,
+      Source: ModSource.OptionalBackgroundMod.toString(),
     } as StatModifierProps,
   ],
   MinSelectedModsRequired: 2,

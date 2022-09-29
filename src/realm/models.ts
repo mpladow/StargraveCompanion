@@ -122,7 +122,7 @@ export const StatModifierSchema: ObjectSchema = {
     _id: 'objectId',
     Stat: 'string',
     ModifierValue: 'int',
-    IsIncrement: 'bool',
+    Source: 'string'
   },
 };
 export const StatSchema: ObjectSchema = {
@@ -148,6 +148,10 @@ export const StatlineSchema: ObjectSchema = {
       type: 'list',
       objectType: 'Stat',
     },
+    StatModifiers: {
+      type: 'list',
+      objectType: 'StatModifier'
+    }
   },
 };
 export const PowerSchema: ObjectSchema = {
@@ -166,15 +170,7 @@ export const PowerSchema: ObjectSchema = {
 };
 
 
-export const generateNewTeam = (name: string) => {
-  return {
-    _id: new Realm.BSON.ObjectId(),
-    TeamName: name,
-    Credits: 500,
-    Experience: 0,
-    Description: '',
-  };
-}
+ 
 
 export const UsersSchema = {
   name: 'Users',

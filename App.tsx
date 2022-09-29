@@ -52,6 +52,7 @@ const App = () => {
   const realm = useRealm();
 
   useEffect(() => {
+    console.log('loading dev data')
     loadDevData();
   }, []);
 

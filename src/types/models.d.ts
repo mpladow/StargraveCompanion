@@ -1,16 +1,18 @@
+import {Stats} from '../common/enums';
+
 export interface BackgroundProps {
   _id: Realm.BSON.ObjectId;
   Name: string;
   Description: string;
-  PermStatModifier: StatModifier[];
-  OptionalModifiers: StatModifier[];
+  PermStatModifier: StatModifierProps[];
+  OptionalModifiers: StatModifierProps[];
   MinSelectedModsRequired: number;
 }
 export interface StatModifierProps {
   _id: Realm.BSON.ObjectId;
   Stat: string;
   ModifierValue: number;
-  IsIncrement: boolean;
+  Source: 'string'
 }
 export interface TeamProps {
   _id: Realm.BSON.ObjectId;
@@ -31,7 +33,7 @@ export interface CharacterProps {
   Level: number;
   GearSlots: number;
   Equipment: EquipmentProps[];
-  StatLine: StatLineProps[];
+  StatLine: StatLineProps;
   Powers: PowerProps[];
 }
 
@@ -61,9 +63,8 @@ export interface ArmourProps {
 
 export interface StatlineProps {
   _id: Realm.BSON.ObjectId;
-  Name: string;
   Stats: StatProps[];
-
+  StatModifiers: StatModifierProps[];
 }
 
 export interface StatProps {
@@ -72,6 +73,7 @@ export interface StatProps {
   Value: number;
   Order: number;
 }
+
 export interface PowerProps {
   _id: Realm.BSON.ObjectId;
   PowerId: number;

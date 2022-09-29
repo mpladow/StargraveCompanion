@@ -64,7 +64,9 @@ const CrewCreatorProvider = ({
       }
     });
   };
-  const updateCaptain = () => {};
+  const updateCaptain = (newCaptain: CharacterProps) => {
+
+  };
 
   // get data from realmdb
   // create a new team if no team exists
