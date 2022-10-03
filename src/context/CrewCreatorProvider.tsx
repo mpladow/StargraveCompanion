@@ -81,11 +81,14 @@ const CrewCreatorProvider = ({
         if (team) {
           team.Captain = team && newCaptain;
           console.log(team, 'team');
-          setCurrentTeam((x) => {
-            let updated = { ...x };
-            updated.Captain = newCaptain;
-            return updated;
-          })
+          setCurrentTeam(team);
+          // let x = {...currentTeam, };
+          // console.log(x, currentTeam);
+          // setCurrentTeam((x) => {
+          //   let updated = { ...x };
+          //   updated.Captain = newCaptain;
+          //   return updated;
+          // })
         }
       }
     });

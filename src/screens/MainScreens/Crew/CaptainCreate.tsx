@@ -187,7 +187,7 @@ const CaptainCreate = () => {
   const onSaveCaptain = () => {
     const newCaptain: CharacterProps = { ...getValues(), _id: new Realm.BSON.ObjectID(), Background: selectedBackground ? selectedBackground : backgrounds[0], IsCaptain: true };
     createCaptain(newCaptain);
-    navigation.navigate('CrewHome')
+    navigation.navigate('Crew')
   }
 
   // get all default powers for background
