@@ -14,8 +14,8 @@ import {
   DarkTheme as NavigationDarkTheme,
   DefaultTheme as NavigationDefaultTheme,
 } from '@react-navigation/native';
-import React, {useEffect} from 'react';
-import {SafeAreaView, StatusBar} from 'react-native';
+import React, { useEffect } from 'react';
+import { SafeAreaView, StatusBar } from 'react-native';
 
 import AuthProvider from './src/context/AuthProvider';
 import AuthSwitcher from './src/screens/AuthSwitcher';
@@ -30,11 +30,11 @@ import PreferencesProvider, {
   useUserPreferences,
 } from './src/context/PreferencesProvider';
 import CrewCreatorProvider from './src/context/CrewCreatorProvider';
-import {BackgroundBiomorphMOCK, BackgroundCyborgMOCK} from './src/mocks/realm';
+import { ArmourMOCK, BackgroundBiomorphMOCK, BackgroundCyborgMOCK, PowersMOCK, WeaponsMOCK } from './src/mocks/realm';
 import RealmContext from './src/context/RealmContext';
 
 const App = () => {
-  const {isDarkMode} = useUserPreferences();
+  const { isDarkMode } = useUserPreferences();
   const CombinedDefaultTheme = merge(PaperDefaultTheme, NavigationDefaultTheme);
   const CombinedDarkTheme = merge(PaperDarkTheme, NavigationDarkTheme);
 
@@ -48,7 +48,7 @@ const App = () => {
       : CombinedDefaultTheme.colors.text,
   };
 
-  const {useRealm} = RealmContext;
+  const { useRealm } = RealmContext;
   const realm = useRealm();
 
   useEffect(() => {
@@ -63,6 +63,10 @@ const App = () => {
           console.log('Debug data created');
           realm.create('Background', BackgroundBiomorphMOCK);
           realm.create('Background', BackgroundCyborgMOCK);
+          PowersMOCK.forEach(x => realm.create('Power', x));
+          WeaponsMOCK.forEach(x => realm.create('Weapon', x));
+          ArmourMOCK.forEach(x => realm.create('Armour', x));
+          console.log(PowersMOCK, 'mock')
         } else {
           console.log('Data already created');
         }

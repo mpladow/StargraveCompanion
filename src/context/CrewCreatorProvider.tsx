@@ -1,4 +1,4 @@
-import {StyleSheet, Text, useColorScheme, View} from 'react-native';
+import { StyleSheet, Text, useColorScheme, View } from 'react-native';
 import React, {
   createContext,
   ReactElement,
@@ -8,14 +8,16 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import {Colors} from '../themes/Colors';
-import {BackgroundProps, CharacterProps, TeamProps} from '../types/models';
+import { Colors } from '../themes/Colors';
+import { BackgroundProps, CharacterProps, EquipmentProps, PowerProps, TeamProps } from '../types/models';
 import RealmContext from './RealmContext';
-import {BackgroundSchema} from '../realm/models';
-import {DropdownItem} from '../types/types';
+import { BackgroundSchema } from '../realm/models';
+import { DropdownItem } from '../types/types';
 
 interface CrewCreatorContextProps {
   backgrounds: BackgroundProps[];
+  powers: PowerProps[];
+  equipment: EquipmentProps[];
   createNewTeam: (name: string) => void;
   currentTeam: TeamProps | undefined;
   deleteTeam: () => void;
@@ -31,20 +33,35 @@ const CrewCreatorProvider = ({
 }: {
   children: ReactNode;
 }): ReactElement => {
-  const {useRealm, useQuery} = RealmContext;
+  const { useRealm, useQuery } = RealmContext;
   const [backgrounds, setBackgrounds] = useState<BackgroundProps[]>([]);
+  const [powers, setPowers] = useState<PowerProps[]>([]);
   const [currentTeam, setCurrentTeam] = useState<TeamProps>();
+  const [equipment, setEquipment] = useState<EquipmentProps[]>([]);
   const realm = useRealm();
 
   useEffect(() => {
     getBackgrounds();
+    getPowers();
     getCurrentTeam();
+    getEquipment();
   }, []);
 
   const getBackgrounds = () => {
     const _backgrounds = realm.objects<BackgroundProps>('Background');
     if (!_backgrounds.isEmpty()) setBackgrounds(Array.from(_backgrounds));
   };
+  const getPowers = () => {
+    const _powers = realm.objects<PowerProps>('Power');
+    // console.log(_powers, 'powers')
+    setPowers(Array.from(_powers));
+  }
+
+  const getEquipment = () => {
+    const _equipment = realm.objects<EquipmentProps>('Equipment');
+    if (!_equipment.isEmpty()) setEquipment(Array.from(_equipment));
+  }
+
   const getCurrentTeam = () => {
     const currentTeam = realm.objects<TeamProps>('Team')[0];
     setCurrentTeam(currentTeam);
@@ -55,18 +72,40 @@ const CrewCreatorProvider = ({
       newCaptain._id = new Realm.BSON.ObjectID();
       newCaptain.Level = 15;
       newCaptain.IsCaptain = true;
+      newCaptain.GearSlots = 6;
+      console.log(newCaptain.Background, 'background');
 
-      if (currentTeam){
+      if (currentTeam) {
         let team = getTeamById(currentTeam?._id.toHexString());
-        if (team){
+        console.log(team, 'currentTeam')
+        if (team) {
           team.Captain = team && newCaptain;
+          console.log(team, 'team');
+          setCurrentTeam((x) => {
+            let updated = { ...x };
+            updated.Captain = newCaptain;
+            return updated;
+          })
         }
       }
     });
   };
+
+
   const updateCaptain = (newCaptain: CharacterProps) => {
 
   };
+  const updateEquipment = (selectedEquipment: EquipmentProps[], isCaptain: boolean) => {
+    realm.write(() => {
+      if (currentTeam) {
+        let team: TeamProps | undefined = getTeamById(currentTeam?._id.toHexString());
+        if (isCaptain && team) {
+          team.Captain.Equipment = selectedEquipment;
+        }
+
+      }
+    })
+  }
 
   // get data from realmdb
   // create a new team if no team exists
@@ -127,6 +166,8 @@ const CrewCreatorProvider = ({
     <CrewCreatorContext.Provider
       value={{
         backgrounds,
+        powers,
+        equipment,
         createNewTeam,
         currentTeam,
         deleteTeam,

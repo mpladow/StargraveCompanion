@@ -1,15 +1,43 @@
 import {ObjectSchema} from 'realm';
 
+export const ActivationModifierSchema: Object = {
+  name: 'ActivationModifier',
+  embeded: true,
+  properties: {
+    _id: 'objectId',
+    ModifierValue: 'int',
+    Source: 'string'
+  }
+}
+
+export const BackgroundSchema: ObjectSchema = {
+  name: 'Background',
+  primaryKey: '_id',
+  properties: {
+    _id: 'objectId',
+    Name: 'string',
+    Description: 'string',
+    PermStatModifiers: {
+      type: 'list',
+      objectType: 'StatModifier',
+    },
+    OptionalModifiers: {
+      type: 'list',
+      objectType: 'StatModifier',
+    },
+    MinSelectedModsRequired: 'int',
+    DefaultPowers: {
+      type: 'list',
+      objectType: 'int'
+    }
+  },
+};
 export const CharacterSchema: ObjectSchema = {
   name: 'Character',
   embedded: true,
   properties: {
     _id: 'objectId',
     Name: 'string',
-    CharacterId: {
-      type: 'int',
-      indexed: true,
-    },
     IsCaptain: 'bool',
     Background: 'Background',
     Level: 'int',
@@ -71,6 +99,7 @@ export const WeaponSchema: ObjectSchema = {
     },
     Name: 'string',
     Description: 'string',
+    Range:'string?',
     SpecialRules:'string?',
     StatModifiers: {
       type: 'list',
@@ -97,24 +126,8 @@ export const ArmourSchema: ObjectSchema = {
     GearSlots: 'int?'
   },
 }
-export const BackgroundSchema: ObjectSchema = {
-  name: 'Background',
-  primaryKey: '_id',
-  properties: {
-    _id: 'objectId',
-    Name: 'string',
-    Description: 'string',
-    PermStatModifier: {
-      type: 'list',
-      objectType: 'StatModifier',
-    },
-    OptionalModifiers: {
-      type: 'list',
-      objectType: 'StatModifier',
-    },
-    MinSelectedModsRequired: 'int',
-  },
-};
+
+
 export const StatModifierSchema: ObjectSchema = {
   name: 'StatModifier',
   embedded: true,
@@ -142,8 +155,6 @@ export const StatlineSchema: ObjectSchema = {
   name: 'StatLine',
   properties: {
     _id: 'objectId',
-    StatLineId: 'int',
-    Name: 'string',
     Stats: {
       type: 'list',
       objectType: 'Stat',
@@ -165,7 +176,12 @@ export const PowerSchema: ObjectSchema = {
     Name: 'string',
     Description: 'string',
     Activation: 'int',
-    Stress: 'int'
+    Stress: 'int',
+    AdditionalInfo: 'string?',
+    ActivationModifiers: {
+      type: 'list',
+      objectType: 'ActivationModifier'
+    }
   },
 };
 

@@ -1,10 +1,10 @@
-import {StyleSheet, View} from 'react-native';
-import React from 'react';
-import {StatlineProps, StatProps} from '../../../../types/models';
-import {Text} from 'react-native-paper';
+import { Pressable, StyleSheet, View } from 'react-native';
+import React, { useState } from 'react';
+import { StatlineProps, StatProps } from '../../../../types/models';
+import { Modal, Text } from 'react-native-paper';
 import Container from '../../../../common/components/Atoms/Container';
 import Stat from './Stat';
-import {Stats} from '../../../../common/enums';
+import { Stats } from '../../../../common/enums';
 
 interface StatLineComponent {
   statLine: StatlineProps;
@@ -22,10 +22,14 @@ const StatLine: React.FC<StatLineComponent> = (statLine: StatLineComponent) => {
     );
     return totalModCount + stat.Value;
   };
+  const [showModsModal, setShowModsModal] = useState(false)
+  const showTotalMods = (stat: string) => {
+    console.log('TOTALMODS SHOWN')
+  }
 
   return (
     <View>
-      <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
         <Text variant="labelMedium">Move</Text>
         <Text variant="labelMedium">Fight</Text>
         <Text variant="labelMedium">Shoot</Text>
@@ -33,7 +37,7 @@ const StatLine: React.FC<StatLineComponent> = (statLine: StatLineComponent) => {
         <Text variant="labelMedium">Will</Text>
         <Text variant="labelMedium">Health</Text>
       </View>
-      <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
         {statLine.statLine.Stats.map(x => {
           const addPlus =
             x.Name == 'Fight' || x.Name == 'Shoot' || x.Name == 'Will';

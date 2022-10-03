@@ -10,6 +10,7 @@ import DropDown from 'react-native-paper-dropdown';
 import {useCrewCreator} from '../../../context/CrewCreatorProvider';
 import {DropdownItem} from '../../../types/types';
 import DropdownField from '../../../common/components/Atoms/DropdownField';
+import UnitCardCharacter from './common/UnitCardCharacter';
 
 const CrewHome = ({navigation}) => {
   const [editMode, setEditMode] = useState(false);
@@ -34,11 +35,11 @@ const CrewHome = ({navigation}) => {
   });
 
   const editCaptain = () => {
-    navigation.navigate('CaptainEdit');
+    navigation.navigate('CaptainCreate');
   };
 
   const editFirstMate = () => {
-    navigation.navigate('CaptainEdit');
+    navigation.navigate('CaptainCreate');
   };
   useEffect(() => {
     if (currentTeam) {
@@ -92,9 +93,7 @@ const CrewHome = ({navigation}) => {
   };
   const renderCaptainField = () => {
     return currentTeam?.Captain ? (
-      <View>
-        <Text>Captain Created</Text>
-      </View>
+      <UnitCardCharacter character={currentTeam?.Captain}/>
     ) : (
       <View style={{paddingBottom: 8}}>
         <Button mode="contained" onPress={editCaptain}>
