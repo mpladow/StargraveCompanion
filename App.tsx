@@ -32,6 +32,7 @@ import PreferencesProvider, {
 import CrewCreatorProvider from './src/context/CrewCreatorProvider';
 import { ArmourMOCK, BackgroundBiomorphMOCK, BackgroundCyborgMOCK, PowersMOCK, WeaponsMOCK } from './src/mocks/realm';
 import RealmContext from './src/context/RealmContext';
+import { PowersProvider } from './src/context/PowersProvider';
 
 const App = () => {
   const { isDarkMode } = useUserPreferences();
@@ -83,15 +84,17 @@ const App = () => {
         <NavigationContainer
           theme={isDarkMode ? CombinedDarkTheme : CombinedDefaultTheme}>
           <CrewCreatorProvider>
-            <SafeAreaView style={backgroundStyle}>
-              <AuthProvider>
-                <StatusBar
-                  barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-                  backgroundColor={backgroundStyle.backgroundColor}
-                />
-                <AuthSwitcher />
-              </AuthProvider>
-            </SafeAreaView>
+            <PowersProvider>
+              <SafeAreaView style={backgroundStyle}>
+                <AuthProvider>
+                  <StatusBar
+                    barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+                    backgroundColor={backgroundStyle.backgroundColor}
+                  />
+                  <AuthSwitcher />
+                </AuthProvider>
+              </SafeAreaView>
+            </PowersProvider>
           </CrewCreatorProvider>
         </NavigationContainer>
       </PaperProvider>

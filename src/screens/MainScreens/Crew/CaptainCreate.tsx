@@ -1,24 +1,18 @@
 import { Dimensions, StyleSheet, View } from 'react-native';
 import React, { useEffect, useMemo, useState } from 'react';
 import {
-  Badge,
   Button,
   Card,
   Chip,
   Divider,
-  Headline,
-  List,
   Modal,
   Portal,
-  Provider,
   Text,
-  TextInput,
   useTheme,
 } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import Field from '../../../common/components/Atoms/Field';
 import { useFieldArray, useForm } from 'react-hook-form';
-import Container from '../../../common/components/Atoms/Container';
 import DropdownField from '../../../common/components/Atoms/DropdownField';
 import { DropdownItem } from '../../../types/types';
 import { useCrewCreator } from '../../../context/CrewCreatorProvider';
@@ -35,10 +29,8 @@ import {
   StatProps,
   CharacterProps,
 } from '../../../types/models';
-import PowersSelector from './common/PowersSelector';
-import PowerCard from './common/PowerCard';
 import PowerListItem from './common/PowerListItem';
-import { Colors } from '../../../themes/Colors';
+import { usePowersContext } from '../../../context/PowersProvider';
 
 type CharacterFormProps = {
   Name: string;
@@ -99,15 +91,13 @@ const CaptainCreate = () => {
   const navigation = useNavigation();
   const [editMode, setEditMode] = useState(true);
   const [showPowersModal, setShowPowersModal] = useState(false)
-  const { backgrounds, powers, createCaptain, currentTeam } = useCrewCreator();
-  const [backgroundPowers, setBackgroundPowers] = useState<PowerProps[]>([])
-  const [nonBackgroundPowers, setNonBackgroundPowers] = useState<PowerProps[]>([]);
+  const { backgrounds, createCaptain, currentTeam } = useCrewCreator();
+  const {powers, corePowers, optionalPowers, setBackgroundInContext} = usePowersContext();
   const [newCharacter, setNewCharacter] = useState(currentTeam?.Captain?._id ? true : true)
   const [showCorePowersList, setShowCorePowersList] = useState(true)
   const [showOptionalPowersList, setShowOptionalPowersList] = useState(false)
 
   const theme = useTheme();
-  const [linkedPowers, setLinkedPowers] = useState<PowerProps[]>([])
   const [optionalStatsSelected, setOptionalStatsSelected] = useState<
     StatModifierProps[]
   >([]);
@@ -221,42 +211,11 @@ const CaptainCreate = () => {
   }
 
   // get all default powers for background
-  useEffect(() => {
-    if (selectedBackground?.DefaultPowers) {
-      setBackgroundPowers(filterPowersByBackground())
 
-    }
-  }, [selectedBackground])
 
   // get all remaining powers after backgroundpowers have been set
-  useEffect(() => {
-    if (backgroundPowers) {
-      setNonBackgroundPowers(filterPowersByNonBackground());
-    }
-  }, [backgroundPowers])
-
-  const filterPowersByBackground = () => {
-    const filtered = powers.filter(x => {
-      return selectedBackground?.DefaultPowers.find(y => y == x.PowerId);
-    })
-    // filter out powers that already exist in form
-    // const filterAlreadySelected = filtered.filter(x => {
-    //   return getValues('Powers').find(y => y.PowerId == x.PowerId);
-    // })
-
-    return filtered;
-
-  }
-  const filterPowersByNonBackground = () => {
-    const filtered = powers.filter(x => {
-      let xx = !backgroundPowers.includes(x);
-      return xx;
-    })
 
 
-
-    return filtered;
-  }
 
   // get background details and modifiers when background changes
   useEffect(() => {
@@ -267,9 +226,7 @@ const CaptainCreate = () => {
       reset();
       setSelectedBackground(foundBG);
 
-      // get powers linked to background
-      var intersections = powers.filter(e => foundBG.DefaultPowers.indexOf(e.PowerId) !== -1);
-      setLinkedPowers(intersections);
+      setBackgroundInContext(foundBG);
 
       // add modifier
       const statLineModifiers: StatModifierProps[] = getValues(
@@ -439,17 +396,14 @@ const CaptainCreate = () => {
             <Card mode="outlined" style={{ marginBottom: 4 }}>
               <Card.Title title={<Text variant='titleSmall'>Powers</Text>} />
               <Card.Content>
-                {getValues('Powers').map(x => {
+                {powersArray.fields.map(x => {
                   return <View><Text selectionColor={'blue'}>{x.Name}</Text></View>
                 })}
                 <Button onPress={selectPowers}>Select Powers</Button>
 
               </Card.Content>
             </Card>
-
           </>
-
-
         )}
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <View style={{ flex: 0.45 }}>
@@ -482,10 +436,6 @@ const CaptainCreate = () => {
               <View style={{ height: Dimensions.get('screen').height / 6, flexGrow: 0, flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'wrap' }}>
                 {powersArray.fields.map((item, index) => (
                   <Chip icon="information" onClose={() => toggleCharacterPower(item.PowerId)}>{item.Name}</Chip>
-
-                  // <View style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row', paddingLeft: 8,  borderRadius: 10, borderColor: 'black', borderWidth: 1 }}>
-
-                  // </View>
                 ))}
               </View>
               <View>
@@ -496,11 +446,11 @@ const CaptainCreate = () => {
             <View style={{ flex: 1 }}>
               <Text>{showCorePowersList ? 'Core Powers' : 'Optional Powers'}</Text>
               {showCorePowersList && selectedBackground ? (
-                <FlatList data={backgroundPowers} renderItem={({ item }) => <PowerListItem power={item} isCorePower={false} onCheckPress={() => toggleCharacterPower(item.PowerId)} isChecked={getIsPowerSelected(item.PowerId)} />} />
+                <FlatList data={corePowers} renderItem={({ item }) => <PowerListItem power={item} isCorePower={false} onCheckPress={() => toggleCharacterPower(item.PowerId)} isChecked={getIsPowerSelected(item.PowerId)} />} />
               )
 
                 : (
-                  <FlatList data={nonBackgroundPowers} renderItem={({ item }) => <PowerListItem power={item} isCorePower={false} onCheckPress={() => toggleCharacterPower(item.PowerId)} isChecked={getIsPowerSelected(item.PowerId)} />} />
+                  <FlatList data={optionalPowers} renderItem={({ item }) => <PowerListItem power={item} isCorePower={false} onCheckPress={() => toggleCharacterPower(item.PowerId)} isChecked={getIsPowerSelected(item.PowerId)} />} />
                 )
               }
             </View>
