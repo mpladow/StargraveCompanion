@@ -1,5 +1,6 @@
 import {ModSource} from '../common/enums';
 import {
+  ActivationModifier,
   ArmourProps,
   BackgroundProps,
   EquipmentProps,
@@ -11,40 +12,45 @@ export const ArmourMOCK: ArmourProps[] = [
   {
     _id: new Realm.BSON.ObjectID(),
     Name: 'Light Armour',
-    GearSlots: 1
+    ArmourId: 1,
+    GearSlots: 1,
   },
   {
     _id: new Realm.BSON.ObjectID(),
     Name: 'Heavy Armour',
+    ArmourId: 2,
     GearSlots: 1,
     StatModifiers: [
       {
         _id: new Realm.BSON.ObjectID(),
         Stat: 'Move',
         ModifierValue: -1,
-        Source: 'Armour'
-      }
-    ]
+        Source: 'Armour',
+      },
+    ],
   },
   {
     _id: new Realm.BSON.ObjectID(),
     Name: 'Combat Armour',
+    ArmourId: 3,
     GearSlots: 2,
     StatModifiers: [
       {
         _id: new Realm.BSON.ObjectID(),
         Stat: 'Move',
         ModifierValue: -1,
-        Source: 'Armour'
-      }
+        Source: 'Armour',
+      },
     ],
-    SpecialRules: '50cr upkeep fee. Includes hand pistol, pistol, and filter mask.'
-  }
-]
+    SpecialRules:
+      '50cr upkeep fee. Includes hand pistol, pistol, and filter mask.',
+  },
+];
 export const WeaponsMOCK: WeaponProps[] = [
   {
     _id: new Realm.BSON.ObjectID(),
     Name: 'Knife',
+    WeaponId: 1,
     GearSlots: 1,
     StatModifiers: [
       {
@@ -58,11 +64,13 @@ export const WeaponsMOCK: WeaponProps[] = [
   {
     _id: new Realm.BSON.ObjectID(),
     Name: 'Hand Weapon',
+    WeaponId: 2,
     GearSlots: 1,
   },
   {
     _id: new Realm.BSON.ObjectID(),
     Name: 'Pistol',
+    WeaponId: 3,
     Range: '10',
     GearSlots: 1,
     StatModifiers: [
@@ -77,12 +85,15 @@ export const WeaponsMOCK: WeaponProps[] = [
   {
     _id: new Realm.BSON.ObjectID(),
     Name: 'Carbine',
+    WeaponId: 4,
     Range: '24',
     GearSlots: 2,
   },
   {
     _id: new Realm.BSON.ObjectID(),
     Name: 'Unarmed',
+    WeaponId: 5,
+
     GearSlots: 0,
     StatModifiers: [
       {
@@ -96,6 +107,7 @@ export const WeaponsMOCK: WeaponProps[] = [
   {
     _id: new Realm.BSON.ObjectID(),
     Name: 'Shotgun',
+    WeaponId: 6,
     GearSlots: 2,
     StatModifiers: [
       {
@@ -117,7 +129,8 @@ export const PowersMOCK: PowerProps[] = [
     Activation: 12,
     Stress: 2,
     AdditionalInfo: 'Self Only',
-    ActivationModifiers: [],
+    IsCorePower: false,
+    // ActivationModifiers: [{} as ActivationModifier],
   },
 
   {
@@ -128,7 +141,9 @@ export const PowersMOCK: PowerProps[] = [
     Activation: 10,
     Stress: 0,
     AdditionalInfo: 'Line of Sight',
-    ActivationModifiers: [],
+    IsCorePower: false,
+
+    // ActivationModifiers: [],
   },
   {
     _id: new Realm.BSON.ObjectID(),
@@ -138,7 +153,8 @@ export const PowersMOCK: PowerProps[] = [
     Activation: 12,
     Stress: 2,
     AdditionalInfo: 'Self Only or Out of Game',
-    ActivationModifiers: [],
+    IsCorePower: false,
+
   },
   {
     _id: new Realm.BSON.ObjectID(),
@@ -148,7 +164,8 @@ export const PowersMOCK: PowerProps[] = [
     Activation: 10,
     Stress: 2,
     AdditionalInfo: 'Self Only',
-    ActivationModifiers: [],
+    IsCorePower: false,
+
   },
   {
     _id: new Realm.BSON.ObjectID(),
@@ -158,7 +175,8 @@ export const PowersMOCK: PowerProps[] = [
     Activation: 8,
     Stress: 1,
     AdditionalInfo: 'Self Only or Touch',
-    ActivationModifiers: [],
+    IsCorePower: false,
+
   },
 ];
 export const BackgroundBiomorphMOCK: BackgroundProps = {

@@ -13,7 +13,8 @@ export const PowerStatContainer = ({ isLast, children }) => {
 const PowerCard: React.FC<PowerCardProps> = ({ power }) => {
     const getTotalActivation = () => {
         if (power.ActivationModifiers) {
-            let totalModCount = power.ActivationModifiers.reduce(
+            let copy = power.ActivationModifiers;
+            let totalModCount = copy.reduce(
                 (partial, a) => partial + a.ModifierValue,
                 0,
             );

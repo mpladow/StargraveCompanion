@@ -6,9 +6,27 @@ export const ActivationModifierSchema: Object = {
   properties: {
     _id: 'objectId',
     ModifierValue: 'int',
-    Source: 'string'
-  }
-}
+    Source: 'string',
+  },
+};
+export const ArmourSchema: ObjectSchema = {
+  name: 'Armour',
+  properties: {
+    _id: 'objectId',
+    ArmourId: {
+      type: 'int',
+      indexed: true,
+    },
+    Name: 'string',
+    Description: 'string?',
+    SpecialRules: 'string?',
+    StatModifiers: {
+      type: 'list',
+      objectType: 'StatModifier',
+    },
+    GearSlots: 'int?',
+  },
+};
 
 export const BackgroundSchema: ObjectSchema = {
   name: 'Background',
@@ -28,8 +46,8 @@ export const BackgroundSchema: ObjectSchema = {
     MinSelectedModsRequired: 'int',
     DefaultPowers: {
       type: 'list',
-      objectType: 'int'
-    }
+      objectType: 'int',
+    },
   },
 };
 export const CharacterSchema: ObjectSchema = {
@@ -63,7 +81,7 @@ export const TeamSchema: ObjectSchema = {
     Description: 'string?',
     Captain: 'Character?',
     FirstMate: 'Character?',
-    SpecialistSlots: 'int'
+    SpecialistSlots: 'int',
     // Soldiers: {
     //   type: 'list',
     //   objectType: 'SoldierSchema',
@@ -84,49 +102,10 @@ export const EquipmentSchema: ObjectSchema = {
     },
     Name: 'string',
     Description: 'string',
-    SpecialRules:'string?',
-    GearSlots: 'int?'
+    SpecialRules: 'string?',
+    GearSlots: 'int?',
   },
 };
-
-export const WeaponSchema: ObjectSchema = {
-  name: 'Weapon',
-  properties: {
-    _id: 'objectId',
-    EquipmentId: {
-      type: 'int',
-      indexed: true,
-    },
-    Name: 'string',
-    Description: 'string',
-    Range:'string?',
-    SpecialRules:'string?',
-    StatModifiers: {
-      type: 'list',
-      objectType: 'StatModifer'
-    },
-    GearSlots: 'int?'
-  },
-}
-export const ArmourSchema: ObjectSchema = {
-  name: 'Armour',
-  properties: {
-    _id: 'objectId',
-    EquipmentId: {
-      type: 'int',
-      indexed: true,
-    },
-    Name: 'string',
-    Description: 'string',
-    SpecialRules:'string?',
-    StatModifiers: {
-      type: 'list',
-      objectType: 'StatModifer'
-    },
-    GearSlots: 'int?'
-  },
-}
-
 
 export const StatModifierSchema: ObjectSchema = {
   name: 'StatModifier',
@@ -135,7 +114,7 @@ export const StatModifierSchema: ObjectSchema = {
     _id: 'objectId',
     Stat: 'string',
     ModifierValue: 'int',
-    Source: 'string'
+    Source: 'string',
   },
 };
 export const StatSchema: ObjectSchema = {
@@ -161,8 +140,8 @@ export const StatlineSchema: ObjectSchema = {
     },
     StatModifiers: {
       type: 'list',
-      objectType: 'StatModifier'
-    }
+      objectType: 'StatModifier',
+    },
   },
 };
 export const PowerSchema: ObjectSchema = {
@@ -180,13 +159,10 @@ export const PowerSchema: ObjectSchema = {
     AdditionalInfo: 'string?',
     ActivationModifiers: {
       type: 'list',
-      objectType: 'ActivationModifier'
-    }
+      objectType: 'ActivationModifier',
+    },
   },
 };
-
-
- 
 
 export const UsersSchema = {
   name: 'Users',
@@ -203,5 +179,22 @@ export const UsersSchema = {
       type: 'list',
       objectType: 'Team',
     },
+  },
+};
+
+export const WeaponSchema: ObjectSchema = {
+  name: 'Weapon',
+  properties: {
+    _id: 'objectId',
+    Name: 'string',
+    WeaponId: 'int',
+    Description: 'string?',
+    Range: 'string?',
+    SpecialRules: 'string?',
+    StatModifiers: {
+      type: 'list',
+      objectType: 'StatModifier',
+    },
+    GearSlots: 'int?',
   },
 };

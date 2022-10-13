@@ -53,6 +53,7 @@ export interface EquipmentProps {
 export interface WeaponProps {
   _id: Realm.BSON.ObjectId;
   Name: string;
+  WeaponId: number;
   Description?: string;
   Range?: string,
   SpecialRules?: string;
@@ -62,6 +63,7 @@ export interface WeaponProps {
 export interface ArmourProps {
   _id: Realm.BSON.ObjectId;
   Name: string;
+  ArmourId: number;
   Description?: string;
   SpecialRules?: string;
   StatModifiers?: StatModifierProps[];
@@ -90,4 +92,5 @@ export interface PowerProps {
   Stress: number;
   AdditionalInfo?: string?;
   ActivationModifiers?: ActivationModifier[];
+  IsCorePower: boolean;
 }

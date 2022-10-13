@@ -1,8 +1,10 @@
 import { Dimensions, StyleSheet, View } from 'react-native';
 import React, { useEffect, useMemo, useState } from 'react';
 import {
+  Badge,
   Button,
   Card,
+  Chip,
   Divider,
   Headline,
   List,
@@ -11,10 +13,11 @@ import {
   Provider,
   Text,
   TextInput,
+  useTheme,
 } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import Field from '../../../common/components/Atoms/Field';
-import { useForm } from 'react-hook-form';
+import { useFieldArray, useForm } from 'react-hook-form';
 import Container from '../../../common/components/Atoms/Container';
 import DropdownField from '../../../common/components/Atoms/DropdownField';
 import { DropdownItem } from '../../../types/types';
@@ -35,6 +38,7 @@ import {
 import PowersSelector from './common/PowersSelector';
 import PowerCard from './common/PowerCard';
 import PowerListItem from './common/PowerListItem';
+import { Colors } from '../../../themes/Colors';
 
 type CharacterFormProps = {
   Name: string;
@@ -97,9 +101,12 @@ const CaptainCreate = () => {
   const [showPowersModal, setShowPowersModal] = useState(false)
   const { backgrounds, powers, createCaptain, currentTeam } = useCrewCreator();
   const [backgroundPowers, setBackgroundPowers] = useState<PowerProps[]>([])
+  const [nonBackgroundPowers, setNonBackgroundPowers] = useState<PowerProps[]>([]);
   const [newCharacter, setNewCharacter] = useState(currentTeam?.Captain?._id ? true : true)
+  const [showCorePowersList, setShowCorePowersList] = useState(true)
+  const [showOptionalPowersList, setShowOptionalPowersList] = useState(false)
 
-
+  const theme = useTheme();
   const [linkedPowers, setLinkedPowers] = useState<PowerProps[]>([])
   const [optionalStatsSelected, setOptionalStatsSelected] = useState<
     StatModifierProps[]
@@ -129,9 +136,17 @@ const CaptainCreate = () => {
       StatLine: currentTeam?.Captain?.StatLine
         ? currentTeam.Captain.StatLine
         : generateCaptDefaultStatline(),
-      Powers: []
+      Powers: new Array as PowerProps[]
     },
   });
+
+  //@ts-ignore
+  const powersArray = useFieldArray({
+    control,
+    name: "Powers"
+  });
+
+
   const [showConfirmAddModal, setShowConfirmAddModal] = useState(false)
 
   // setup Dropdown values
@@ -145,9 +160,10 @@ const CaptainCreate = () => {
   // Reset Form
   const onResetPress = () => {
     reset();
-    console.log('RESET FORM');
+
   };
   const bgWatch = watch('Background');
+  const powersWatch = watch('Powers');
 
   // add and remove stat choices
   const toggleOptionalStatToCharacter = (
@@ -183,9 +199,23 @@ const CaptainCreate = () => {
   const selectPowers = () => {
     setShowPowersModal(true)
   }
+  useEffect(() => {
+
+
+
+  }, [powersWatch])
+
 
   const onSaveCaptain = () => {
-    const newCaptain: CharacterProps = { ...getValues(), _id: new Realm.BSON.ObjectID(), Background: selectedBackground ? selectedBackground : backgrounds[0], IsCaptain: true };
+    const newCaptain: CharacterProps = {
+      ...getValues(),
+      _id: new Realm.BSON.ObjectID(),
+      Background: selectedBackground ? selectedBackground : backgrounds[0],
+      IsCaptain: true,
+      Powers: powersArray.fields
+    };
+    console.log(newCaptain);
+    newCaptain.Powers.forEach(x => x.ActivationModifiers = [])
     createCaptain(newCaptain);
     navigation.navigate('Crew')
   }
@@ -198,13 +228,34 @@ const CaptainCreate = () => {
     }
   }, [selectedBackground])
 
+  // get all remaining powers after backgroundpowers have been set
+  useEffect(() => {
+    if (backgroundPowers) {
+      setNonBackgroundPowers(filterPowersByNonBackground());
+    }
+  }, [backgroundPowers])
+
   const filterPowersByBackground = () => {
     const filtered = powers.filter(x => {
       return selectedBackground?.DefaultPowers.find(y => y == x.PowerId);
     })
-    console.log(filtered, 'filtered')
+    // filter out powers that already exist in form
+    // const filterAlreadySelected = filtered.filter(x => {
+    //   return getValues('Powers').find(y => y.PowerId == x.PowerId);
+    // })
+
     return filtered;
 
+  }
+  const filterPowersByNonBackground = () => {
+    const filtered = powers.filter(x => {
+      let xx = !backgroundPowers.includes(x);
+      return xx;
+    })
+
+
+
+    return filtered;
   }
 
   // get background details and modifiers when background changes
@@ -213,12 +264,13 @@ const CaptainCreate = () => {
       x => x._id.toHexString() == bgWatch,
     );
     if (foundBG) {
+      reset();
       setSelectedBackground(foundBG);
 
       // get powers linked to background
       var intersections = powers.filter(e => foundBG.DefaultPowers.indexOf(e.PowerId) !== -1);
       setLinkedPowers(intersections);
-      console.log(intersections, 'linked powers')
+
       // add modifier
       const statLineModifiers: StatModifierProps[] = getValues(
         'StatLine.StatModifiers',
@@ -246,6 +298,47 @@ const CaptainCreate = () => {
     }
   }, [bgWatch]);
 
+  // add or remove this power from the form
+  const toggleCharacterPower = (powerId: number) => {
+
+    const powerToAdd = powers.find(x => x.PowerId == powerId);
+
+
+    const powerExists = powersArray.fields.find(x => x.PowerId === powerId);
+
+    if (powerToAdd) {
+      if (powerExists) {
+        const index = powersArray.fields.indexOf(powerExists)
+        console.log(index, 'index');
+        // setValue('Powers', newArray);
+        powersArray.remove(index)
+      } else {
+        powersArray.append(powerToAdd);
+
+      }
+    }
+
+    // do checks to make sure no more powers than are allowed are added
+  }
+  const getIsPowerSelected = (powerId: number) => {
+    const powerToCheck = getValues('Powers').find(x => x.PowerId == powerId);
+    if (powerToCheck) {
+      return true;
+    }
+    else {
+      return false;
+    }
+
+  }
+  const togglePowersDisplayed = () => {
+    if (showCorePowersList) {
+      setShowCorePowersList(false);
+      setShowOptionalPowersList(true);
+    } else {
+      setShowCorePowersList(true);
+      setShowOptionalPowersList(false);
+    }
+  }
   return (
     <>
       <ScrollView style={{ marginHorizontal: 4 }}>
@@ -346,13 +439,13 @@ const CaptainCreate = () => {
             <Card mode="outlined" style={{ marginBottom: 4 }}>
               <Card.Title title={<Text variant='titleSmall'>Powers</Text>} />
               <Card.Content>
-                {linkedPowers.map(x => {
+                {getValues('Powers').map(x => {
                   return <View><Text selectionColor={'blue'}>{x.Name}</Text></View>
                 })}
-              </Card.Content>
+                <Button onPress={selectPowers}>Select Powers</Button>
 
+              </Card.Content>
             </Card>
-            <Button onPress={selectPowers}>Select Powers</Button>
 
           </>
 
@@ -383,22 +476,35 @@ const CaptainCreate = () => {
           </View>
         </Modal>
         <Modal visible={showPowersModal} onDismiss={() => setShowPowersModal(false)} contentContainerStyle={styles.modalContainer} style={{ paddingVertical: 16 }}>
-          <View style={{ flexDirection: 'column', marginVertical: 32 }}>
-            <View>
-              <View><Text>Total selected</Text></View>
+          <View style={{ flexDirection: 'column', marginVertical: 32, height: Dimensions.get('screen').height }}>
+            <View style={{ flex: 1, justifyContent: 'space-evenly' }}>
+              <Text>Total selected</Text>
+              <View style={{ height: Dimensions.get('screen').height / 6, flexGrow: 0, flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'wrap' }}>
+                {powersArray.fields.map((item, index) => (
+                  <Chip icon="information" onClose={() => toggleCharacterPower(item.PowerId)}>{item.Name}</Chip>
+
+                  // <View style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row', paddingLeft: 8,  borderRadius: 10, borderColor: 'black', borderWidth: 1 }}>
+
+                  // </View>
+                ))}
+              </View>
               <View>
-                <Text>Core Powers</Text>
-                <FlatList style={{ height: Dimensions.get('screen').height / 3, flexGrow: 0 }} data={powers} renderItem={(item) => <PowerListItem power={item.item} />} />
+                <Button mode='outlined' onPress={togglePowersDisplayed}>{showCorePowersList ? 'Show Optional Powers' : 'Show Core Powers'}</Button>
+
               </View>
             </View>
-            {selectedBackground && (
-              // <PowersSelector selectedBackground={selectedBackground} characterPowerIds={getCurrentCharacterPowerIds()} />
-              <View>
-                <Text>Optional Powers</Text>
-                <FlatList style={{ height: Dimensions.get('screen').height / 3, flexGrow: 0 }} data={powers} renderItem={(item) => <PowerListItem power={item.item} />} />
-              </View>
-            )}
-            <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginVertical: 12 }}>
+            <View style={{ flex: 1 }}>
+              <Text>{showCorePowersList ? 'Core Powers' : 'Optional Powers'}</Text>
+              {showCorePowersList && selectedBackground ? (
+                <FlatList data={backgroundPowers} renderItem={({ item }) => <PowerListItem power={item} isCorePower={false} onCheckPress={() => toggleCharacterPower(item.PowerId)} isChecked={getIsPowerSelected(item.PowerId)} />} />
+              )
+
+                : (
+                  <FlatList data={nonBackgroundPowers} renderItem={({ item }) => <PowerListItem power={item} isCorePower={false} onCheckPress={() => toggleCharacterPower(item.PowerId)} isChecked={getIsPowerSelected(item.PowerId)} />} />
+                )
+              }
+            </View>
+            <View style={{ flex: .4, flexDirection: 'row', justifyContent: 'space-evenly', paddingTop: 20 }}>
               <Button mode={'contained'} onPress={() => setShowPowersModal(false)}>Save</Button>
               <Button mode={'outlined'} onPress={() => setShowPowersModal(false)}>Back</Button>
             </View>
@@ -408,6 +514,7 @@ const CaptainCreate = () => {
     </>
   );
 };
+
 
 export default CaptainCreate;
 

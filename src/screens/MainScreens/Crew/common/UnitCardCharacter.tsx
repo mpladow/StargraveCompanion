@@ -9,7 +9,7 @@ interface UnitCardCharacterProps {
 }
 const UnitCardCharacter: React.FC<UnitCardCharacterProps> = ({ character }) => {
     useEffect(() => {
-        console.log(character.Background.Name, 'CHAR DETAILS')
+        
     })
     const editEquipment = () => {
         // navigate to page that will allow user to add and remove equipment

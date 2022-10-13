@@ -51,7 +51,7 @@ const CrewHome = ({navigation}) => {
 
   useEffect(() => {
     if (currentTeam) setValue('crewName', currentTeam?.TeamName);
-    console.log('currentTeam useEffect');
+    
   }, [currentTeam?.TeamName]);
 
 
@@ -63,7 +63,7 @@ const CrewHome = ({navigation}) => {
   };
   const onCreateNewTeamPress = () => {
     let crewName = getValues('crewName');
-    console.log(getValues('crewName'));
+    
     createNewTeam(crewName);
   };
 

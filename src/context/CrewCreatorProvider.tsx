@@ -53,8 +53,8 @@ const CrewCreatorProvider = ({
   };
   const getPowers = () => {
     const _powers = realm.objects<PowerProps>('Power');
-    // console.log(_powers, 'powers')
-    setPowers(Array.from(_powers));
+    // 
+    if (!_powers.isEmpty()) setPowers(Array.from(_powers));
   }
 
   const getEquipment = () => {
@@ -73,17 +73,17 @@ const CrewCreatorProvider = ({
       newCaptain.Level = 15;
       newCaptain.IsCaptain = true;
       newCaptain.GearSlots = 6;
-      console.log(newCaptain.Background, 'background');
+
 
       if (currentTeam) {
         let team = getTeamById(currentTeam?._id.toHexString());
-        console.log(team, 'currentTeam')
+
         if (team) {
           team.Captain = team && newCaptain;
-          console.log(team, 'team');
+
           setCurrentTeam(team);
           // let x = {...currentTeam, };
-          // console.log(x, currentTeam);
+          // 
           // setCurrentTeam((x) => {
           //   let updated = { ...x };
           //   updated.Captain = newCaptain;
@@ -119,13 +119,13 @@ const CrewCreatorProvider = ({
       let teamToUpdate = getTeamById(currentTeam?._id.toHexString());
       realm.write(() => {
         if (teamToUpdate) teamToUpdate.TeamName = name;
-        console.log('team name updated');
+
       });
     }
   };
   const createNewTeam = (name: string) => {
     if (!name) {
-      console.log('no team name');
+
       return false;
     }
     realm.write(() => {

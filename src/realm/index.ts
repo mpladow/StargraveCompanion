@@ -7,7 +7,9 @@ import {
   StatModifierSchema,
   TeamSchema,
   PowerSchema,
-  ActivationModifierSchema
+  ActivationModifierSchema,
+  WeaponSchema,
+  ArmourSchema
 } from './models';
 
 export const schema = [
@@ -19,5 +21,7 @@ export const schema = [
   BackgroundSchema,
   StatSchema,
   PowerSchema,
-  ActivationModifierSchema
+  ActivationModifierSchema,
+  WeaponSchema,
+  ArmourSchema
 ];
